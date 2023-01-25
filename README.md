@@ -21,4 +21,7 @@ Requirements:
 - seaborn (==0.11.2)
 - umap (==0.5.2)
 
-```
+Package installation:
+$ git clone https://github.com/Chen-Li-17/simCAS
+$ cd simCAS   
+$ pip install -r requirements.txt
