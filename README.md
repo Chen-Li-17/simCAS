@@ -7,20 +7,18 @@ simCAS is an embedding-based method for simulating single-cell chromatin accessi
 Requirements:
 1. Python 3.8.13 or greater version
 2. Packages for simCAS
-- numpy:1.21.0
-- pandas:1.3.5
-- scipy:1.4.1
-- rpy2
-- sklearn
-- scanpy
-- Bio
-- random
-- threading
-- anndata
-statmodels
+- numpy (==1.21.0)
+- pandas (==1.3.5)
+- scipy (==1.4.1)
+- rpy2 (==3.5.5)
+- sklearn (==1.2.0)
+- scanpy (==1.9.1)
+- Bio (==1.5.2)
+- anndata (==0.8.0)
+- statmodels (0.13.2)
 3. Packages for tutorials
-- matplotlib
-- seaborn
-- umap
+- matplotlib (==3.5.1)
+- seaborn (==0.11.2)
+- umap (==0.5.2)
 
 ```
