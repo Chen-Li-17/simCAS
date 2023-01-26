@@ -30,11 +30,16 @@ $ pip install -r requirements.txt
 ```
 
 ## Tutorial
-### Jupyter notebook
-For each simulation mode, we provide a detailed tutorial:
+### Basic simulation modes
+For the three basic simulation modes, we provide detailed tutorials:
 - [Pesudo-cell-type mode](https://github.com/Chen-Li-17/simCAS/blob/main/code/tutorial_pseudo-cell-type.ipynb)
 - [Discrete mode](https://github.com/Chen-Li-17/simCAS/blob/main/code/tutorial_discrete.ipynb)
 - [Continuous mode](https://github.com/Chen-Li-17/simCAS/blob/main/code/tutorial_continuous.ipynb)
+
+### Simulating data with batch effects and peak interactions
+To evaluate computational methods more than identify cell states, we also provide the simulation of synthetic scCAS data with user-defined batch effects and peak interactions. Detailed tutorials are shown as below:
+- [Simulating scCAS data with batch effects](https://github.com/Chen-Li-17/simCAS/blob/main/code/generate_batch_effect.ipynb)
+- [Simulating scCAS data with peak interactions](https://github.com/Chen-Li-17/simCAS/blob/main/code/generate_peak_interaction.ipynb)
 
 ### Parameter setting
 The simulation function is **simCAS_generate**, the details of the parameters are shown as below:
