@@ -38,7 +38,8 @@ For each simulation mode, we provide a detailed tutorial:
 
 ### Parameter setting
 The simulation function is **simCAS_generate**, the details of the parameters are shown as below:
-'''
+
+```
   generate scCAS data with three modes: pseudo-cell-type mode, discrete mode, continuous mode.
 
   Parameter
@@ -128,5 +129,5 @@ The simulation function is **simCAS_generate**, the details of the parameters ar
   ----------
   adata_final: anndata
       The simulated scCAS data with anndata format. The cell type information is in the observation.
-'''
+```
 
