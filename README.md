@@ -3,6 +3,7 @@ simCAS is an embedding-based method for simulating single-cell chromatin accessi
 <p align="center">
   <img src="https://github.com/Chen-Li-17/simCAS/blob/main/inst/Fig1-overview.png" width=50%>
 </p>
+
 ## Installation
 ```
 Requirements:
