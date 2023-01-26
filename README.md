@@ -40,6 +40,46 @@ For each simulation mode, we provide a detailed tutorial:
 The simulation function is **simCAS_generate**, the details of the parameters are shown as below:
 
 ```
+simCAS_generate(
+    peak_mean=None,
+    lib_size=None,
+    nozero=None,
+    n_peak=100000.0,
+    n_cell_total=1500,
+    rand_seed=2022,
+    zero_prob=0.5,
+    zero_set='all',
+    effect_mean=0,
+    effect_sd=1,
+    min_popsize=300,
+    min_pop=None,
+    tree_text=None,
+    pops_name=None,
+    pops_size=None,
+    embed_mean_same=1,
+    embed_sd_same=0.5,
+    embed_mean_diff=1,
+    embed_sd_diff=0.5,
+    len_cell_embed=12,
+    n_embed_diff=10,
+    n_embed_same=2,
+    simu_type='discrete',
+    correct_iter=2,
+    activation='exp_linear',
+    two_embeds=True,
+    adata_dir=None,
+    lib_simu='estimate',
+    distribution='Poisson',
+    bw_pm=0.0001,
+    bw_lib=0.05,
+    bw_nozero=0.05,
+    real_param=False,
+    K=None,
+    A=None,
+    stat_estimation='one_logser',
+)
+  Description
+  ----------
   generate scCAS data with three modes: pseudo-cell-type mode, discrete mode, continuous mode.
 
   Parameter
@@ -123,7 +163,6 @@ The simulation function is **simCAS_generate**, the details of the parameters ar
       4. 'NB': Negative Binomial distribution.
       4. 'zero_NB': a variant of NB distribution.
       5. 'ZINB': zero-inflated Negative Binomial distribution. 
-
 
   Return
   ----------
