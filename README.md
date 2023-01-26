@@ -27,7 +27,8 @@ Package installation:
 $ git clone https://github.com/Chen-Li-17/simCAS
 $ cd simCAS   
 $ pip install -r requirements.txt
+```
 
 ## Tutorial
 For each simulation mode, we provide a detailed tutorial:
-- 
+- [Pesudo-cell-type mode](https://github.com/Chen-Li-17/simCAS/blob/main/code/tutorial_pseudo-cell-type.ipynb)
