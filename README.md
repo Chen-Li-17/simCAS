@@ -5,24 +5,43 @@ simCAS is an embedding-based method for simulating single-cell chromatin accessi
 </p>
 
 ## Installation
+### conda environment
+1. If Anaconda (or miniconda) is already installed with **Python3**, skip to 2) otherwise please download and install Python3 Anaconda from here: https://www.anaconda.com/download/ 
+2. Create a new conda environment to run simCAS:
+```
+$ conda create -n simCAS python=3.8.10 r-base
+$ conda activate simCAS
+```
+### R package install
+In our package, we use rpy2 package to use an R package named **ape**. The package needs to be installed in the conda environment:
+```
+$ R
+> install.packages("ape")
+```
+
+### Python package install
+- The required Python packages are shown as below:
 ```
 Requirements:
 1. Python 3.8.13 or greater version
 2. Packages for simCAS
-  numpy (==1.21.0)
-  pandas (==1.3.5)
-  scipy (==1.4.1)
-  rpy2 (==3.5.5)
-  sklearn (==1.2.0)
-  scanpy (==1.9.1)
-  Bio (==1.5.2)
-  anndata (==0.8.0)
-  statmodels (0.13.2)
+  numpy (>=1.21.0)
+  pandas (>=1.3.5)
+  scipy (>=1.4.1)
+  rpy2 (>=3.5.5)
+  scikit-learn (>=1.2.0)
+  scanpy (>=1.9.1)
+  Bio (>=1.5.2)
+  anndata (>=0.8.0)
+  statsmodels (>=0.13.2)
+  episcanpy (==0.3.2)
 3. Packages for tutorials
-  matplotlib (==3.5.1)
-  seaborn (==0.11.2)
-  umap (==0.5.2)
-
+  matplotlib (>=3.5.1)
+  seaborn (>=0.11.2)
+  umap-learn (>=0.5.2)
+```
+- Install the packages and use simCAS with the following commands:
+```
 Package installation:
 $ git clone https://github.com/Chen-Li-17/simCAS
 $ cd simCAS   
