@@ -109,7 +109,7 @@ simCAS_generate(
       2.'by_row': set the PEM values to zero with probability zero_prob for each row (peak) of PEM.
   effect_mean: float, default=0.0
       Mean of the Gaussian distribution, from which the PEM values are sampled.
-  effect_sd: float, default=0.0
+  effect_sd: float, default=1.0
       Standard deviation of the Gaussian distribution, from which the PEM values are sampled.
   min_popsize: int, default=300
       The cell number of the minimal population set in the discrete mode. The number should be less than n_cell_total.
