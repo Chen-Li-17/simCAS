@@ -64,11 +64,11 @@ $ python simCAS.py --simu_type cell_type --activation sigmod --adata_dir ../data
 ```
 Discrete mode
 ```
-python simCAS.py --simu_type discrete --n_cell_total 1500 --activation exp_linear --tree_text '(((A:0.2,B:0.2):0.2,C:0.4):0.5,(D:1,E:1):1);' --pops_name A B C D E
+$ python simCAS.py --simu_type discrete --n_cell_total 1500 --activation exp_linear --tree_text '(((A:0.2,B:0.2):0.2,C:0.4):0.5,(D:1,E:1):1);' --pops_name A B C D E
 ```
 Continuous mode
 ```
-python simCAS.py --simu_type continuous --n_cell_total 1500 --activation exp_linear --tree_text '((((A:1, B:1)C:1,D:2)E:0.5, F:2)R)'
+$ python simCAS.py --simu_type continuous --n_cell_total 1500 --activation exp_linear --tree_text '((((A:1, B:1)C:1,D:2)E:0.5, F:2)R)'
 ```
 The details of the parameters are in the **Parameter setting** part.
 
