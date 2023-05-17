@@ -13,7 +13,7 @@ $ conda create -n simCAS python=3.8.10 r-base
 $ conda activate simCAS
 ```
 ### R package install
-In our package, we use rpy2 package to use an R package named **ape**. The package needs to be installed in the conda environment:
+- In our package, we use rpy2 package to use an R package named **ape**. The package needs to be installed in the conda environment:
 ```
 $ R
 > install.packages("ape")
@@ -50,10 +50,27 @@ $ pip install -r requirements.txt
 
 ## Tutorial
 ### Basic simulation modes
-For the three basic simulation modes, we provide detailed tutorials:
-- [Pesudo-cell-type mode](https://github.com/Chen-Li-17/simCAS/blob/main/code/tutorial_pseudo-cell-type.ipynb)
-- [Discrete mode](https://github.com/Chen-Li-17/simCAS/blob/main/code/tutorial_discrete.ipynb)
-- [Continuous mode](https://github.com/Chen-Li-17/simCAS/blob/main/code/tutorial_continuous.ipynb)
+- For the three basic simulation modes, we provide detailed tutorials:
+  - [Pesudo-cell-type mode](https://github.com/Chen-Li-17/simCAS/blob/main/code/tutorial_pseudo-cell-type.ipynb)
+  - [Discrete mode](https://github.com/Chen-Li-17/simCAS/blob/main/code/tutorial_discrete.ipynb)
+  - [Continuous mode](https://github.com/Chen-Li-17/simCAS/blob/main/code/tutorial_continuous.ipynb)
+- We also provide bash commands for users to more conveniently use simCAS:
+```
+$ cd simCAS/code
+```
+Pesudo-cell-type mode:
+```
+$ python simCAS.py --simu_type cell_type --activation sigmod --adata_dir ../data/adata_forsimulation.h5ad
+```
+Discrete mode
+```
+python simCAS.py --simu_type discrete --n_cell_total 1500 --activation exp_linear --tree_text '(((A:0.2,B:0.2):0.2,C:0.4):0.5,(D:1,E:1):1);' --pops_name A B C D E
+```
+Continuous mode
+```
+python simCAS.py --simu_type continuous --n_cell_total 1500 --activation exp_linear --tree_text '((((A:1, B:1)C:1,D:2)E:0.5, F:2)R)'
+```
+The details of the parameters are in the **Parameter setting** part.
 
 ### Simulating data with batch effects and peak interactions
 To evaluate computational methods more than identify cell states, we also provide the simulation of synthetic scCAS data with user-defined batch effects and peak interactions. Detailed tutorials are shown as below:
@@ -101,6 +118,7 @@ simCAS_generate(
     K=None,
     A=None,
     stat_estimation='one_logser',
+    cell_scale=1.0
 )
   Description
   ----------
@@ -187,6 +205,8 @@ simCAS_generate(
       4. 'NB': Negative Binomial distribution.
       4. 'zero_NB': a variant of NB distribution.
       5. 'ZINB': zero-inflated Negative Binomial distribution. 
+  cell_scale: float, default=1.0
+      when conduct pseudo-celltype simulating mode, cell_scale is the magnification of the original cell number.
 
   Return
   ----------
