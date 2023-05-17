@@ -651,7 +651,7 @@ def Get_Tree_Counts(peak_mean,lib_size,nozero,n_peak,n_cell_total,rand_seed,peak
         atac_counts=np.random.poisson(lambdas, lambdas.shape)
     elif distribution=='Bernoulli':
         for i in range(correct_iter):
-            print('correct_iter '+str(i+1))
+            # print('correct_iter '+str(i+1))
             simu_param_peak=Bernoulli_pm_correction(simu_param_peak,param_pm)
             simu_param_peak=Bernoulli_lib_correction(simu_param_peak,param_lib)
         atac_counts=np.random.binomial(1,p=simu_param_peak,size=simu_param_peak.shape)
@@ -776,7 +776,7 @@ def ZIP(peak_count):
 def Get_Celltype_Counts(adata_part,two_embeds,embed_mean_same,embed_sd_same,len_cell_embed,effect_mean,effect_sd,
                  n_embed_diff,n_embed_same,correct_iter=10,lib_simu='real',n_cell_total=None,
                        distribution='Poisson',activation='sigmod'
-                       ,bw_pm=1e-4,bw_lib=0.05,bw_nozero=0.05,rand_seed=0,zero_prob=0.5,zero_set='all',K=None,A=None,stat_estimation='one_logser'):# 如果lib_simu为‘estimate’则需要提供对应的n_cell_total
+                       ,bw_pm=1e-4,bw_lib=0.05,bw_nozero=0.05,rand_seed=0,zero_prob=0.5,zero_set='all',K=None,A=None,stat_estimation='one_logser',cell_scale=1):# 如果lib_simu为‘estimate’则需要提供对应的n_cell_total
     
     # np.random.seed(rand_seed)
     # 计算真实参数
@@ -802,7 +802,7 @@ def Get_Celltype_Counts(adata_part,two_embeds,embed_mean_same,embed_sd_same,len_
         
         estimation_dis=stat_estimation # 'NB'/'one_logser'/'gamma'/'zero_logser'
         
-        print('the estimation method is ',estimation_dis)
+        # print('the estimation method is ',estimation_dis)
         
         if estimation_dis=='gamma':
             peak_mean_real = np.exp(peak_mean)-1
@@ -841,7 +841,7 @@ def Get_Celltype_Counts(adata_part,two_embeds,embed_mean_same,embed_sd_same,len_
         else:
             raise ValueError('wrong estimation distribution!')
             
-        
+        n_cell_total   =int(len(lib_size)*cell_scale)
         
         lib_size_real = np.exp(lib_size)-1
         lib_size_log = np.log(lib_size_real)
@@ -898,7 +898,7 @@ def Get_Celltype_Counts(adata_part,two_embeds,embed_mean_same,embed_sd_same,len_
     simu_param_peak=X_peak
     if distribution=='Poisson':
         for i in range(correct_iter):
-            print('correct_iter '+str(i+1))
+            # print('correct_iter '+str(i+1))
             simu_param_peak=simu_param_peak/(np.sum(simu_param_peak,axis=0).reshape(1,-1)+1e-8)*((np.exp(param_lib)-1).reshape(1,-1))   # 分母加一个很小的数防止nan
             simu_param_peak=simu_param_peak/(np.sum(simu_param_peak,axis=1).reshape(-1,1)+1e-8)*((np.exp(param_pm)-1).reshape(-1,1))*simu_param_peak.shape[1]
             # simu_param_peak=simu_param_peak/(np.sum(simu_param_peak,axis=0).reshape(1,-1)+1e-8)*((np.exp(param_lib)-1).reshape(1,-1))   # 分母加一个很小的数防止nan
@@ -913,7 +913,7 @@ def Get_Celltype_Counts(adata_part,two_embeds,embed_mean_same,embed_sd_same,len_
         atac_counts=np.random.poisson(lambdas, lambdas.shape)
     elif distribution=='Bernoulli':
         for i in range(correct_iter):
-            print('correct_iter '+str(i+1))
+            # print('correct_iter '+str(i+1))
             simu_param_peak=Bernoulli_pm_correction(simu_param_peak,param_pm)
             simu_param_peak=Bernoulli_lib_correction(simu_param_peak,param_lib)
         atac_counts=np.random.binomial(1,p=simu_param_peak,size=simu_param_peak.shape)
@@ -926,7 +926,7 @@ def simCAS_generate(peak_mean=None,lib_size=None,nozero=None,n_peak=1e5,n_cell_t
                    min_popsize=300,min_pop=None,tree_text=None,pops_name=None,pops_size=None,
                    embed_mean_same=1,embed_sd_same=0.5,embed_mean_diff=1,embed_sd_diff=0.5,
                    len_cell_embed=12,n_embed_diff=10,n_embed_same=2,simu_type='discrete',correct_iter=2,activation='exp_linear',
-                   two_embeds=True,adata_dir=None,lib_simu='estimate',distribution='Poisson',bw_pm=1e-4,bw_lib=0.05,bw_nozero=0.05,real_param=False,K=None,A=None,stat_estimation='one_logser'):
+                   two_embeds=True,adata_dir=None,lib_simu='estimate',distribution='Poisson',bw_pm=1e-4,bw_lib=0.05,bw_nozero=0.05,real_param=False,K=None,A=None,stat_estimation='one_logser',cell_scale=1.0):
     """
     generate scCAS data with three modes: pseudo-cell-type mode, discrete mode, continuous mode.
     
@@ -952,7 +952,7 @@ def simCAS_generate(peak_mean=None,lib_size=None,nozero=None,n_peak=1e5,n_cell_t
         2.'by_row': set the PEM values to zero with probability zero_prob for each row (peak) of PEM.
     effect_mean: float, default=0.0
         Mean of the Gaussian distribution, from which the PEM values are sampled.
-    effect_sd: float, default=0.0
+    effect_sd: float, default=1.0
         Standard deviation of the Gaussian distribution, from which the PEM values are sampled.
     min_popsize: int, default=300
         The cell number of the minimal population set in the discrete mode. The number should be less than n_cell_total.
@@ -1011,6 +1011,8 @@ def simCAS_generate(peak_mean=None,lib_size=None,nozero=None,n_peak=1e5,n_cell_t
         4. 'NB': Negative Binomial distribution.
         4. 'zero_NB': a variant of NB distribution.
         5. 'ZINB': zero-inflated Negative Binomial distribution. 
+    cell_scale: float, default=1.0
+        when conduct pseudo-celltype simulating mode, cell_scale is the magnification of the original cell number.
     
     
     Return
@@ -1100,7 +1102,7 @@ def simCAS_generate(peak_mean=None,lib_size=None,nozero=None,n_peak=1e5,n_cell_t
                                                 embed_mean_same,embed_sd_same,len_cell_embed,effect_mean,effect_sd,
                          n_embed_diff,n_embed_same,correct_iter,lib_simu=lib_simu,n_cell_total=None,
                                             distribution=distribution,activation=activation,
-                        bw_pm=bw_pm,bw_lib=bw_lib,bw_nozero=bw_nozero,rand_seed=rand_seed,zero_prob=zero_prob,zero_set=zero_set,K=K,A=A,stat_estimation=stat_estimation) # peak*cell
+                        bw_pm=bw_pm,bw_lib=bw_lib,bw_nozero=bw_nozero,rand_seed=rand_seed,zero_prob=zero_prob,zero_set=zero_set,K=K,A=A,stat_estimation=stat_estimation,cell_scale=cell_scale) # peak*cell
 
             counts_list.append(counts)
             embed_peak_list.append(embed_peak)
@@ -1215,3 +1217,199 @@ def simCAS_generate(peak_mean=None,lib_size=None,nozero=None,n_peak=1e5,n_cell_t
     adata_final=anndata.AnnData(X=scipy.sparse.csr_matrix(atac_counts.T))
     adata_final.obs['celltype']=meta
     return adata_final
+
+
+
+if __name__ == '__main__':
+    
+    import argparse
+    import matplotlib.pyplot as plt
+    import seaborn as sns
+    import warnings
+    import umap
+    from sklearn.decomposition import PCA
+    import episcanpy.api as epi
+    warnings.filterwarnings("ignore")
+
+    parser = argparse.ArgumentParser(description="simCAS simulation")
+    parser.add_argument('--adata_dir', type=str, default=None)
+    parser.add_argument('--simu_type', type=str, default='cell_type') # cell_type/discrete/continuous
+    parser.add_argument('--n_peak', type=int, default=-1)
+    parser.add_argument('--n_cell_total', type=int, default=1500)
+    parser.add_argument('--zero_prob', type=float, default=0.5)
+    parser.add_argument('--zero_set', type=str, default='all') # 'all'/'by_row'
+    parser.add_argument('--effect_mean', type=float, default=0.0)
+    parser.add_argument('--effect_sd', type=float, default=1.0)
+    parser.add_argument('--min_popsize', type=int, default=300)
+    parser.add_argument('--min_pop', type=str, default=None)
+    parser.add_argument('--tree_text', type=str, default=None)
+    parser.add_argument('--pops_name', nargs='+',type=str, help="a list of names of cell populations",default=None)
+    parser.add_argument('--pops_size', nargs='+',type=int, help="a list of numbers of cell populations",default=None)
+    parser.add_argument('--embed_mean_same', type=float, default=1.0)
+    parser.add_argument('--embed_sd_same', type=float, default=0.5)
+    parser.add_argument('--embed_mean_diff', type=float, default=1.0)
+    parser.add_argument('--embed_sd_diff', type=float, default=0.5)
+    parser.add_argument('--len_cell_embed', type=int, default=12)
+    parser.add_argument('--n_embed_diff', type=int, default=10)
+    parser.add_argument('--correct_iter', type=int, default=2)
+    parser.add_argument('--activation', type=str, default='exp_linear') # exp_linear/sigmod/exp
+    parser.add_argument('--distribution', type=str, default='Poisson') # Poisson/Bernoulli
+    parser.add_argument('--bw_pm', type=float, default=1e-4)
+    parser.add_argument('--bw_lib', type=float, default=0.05)
+    parser.add_argument('--bw_nozero', type=float, default=0.05)
+    parser.add_argument('--K', type=float, default=None)
+    parser.add_argument('--A', type=float, default=None)
+    parser.add_argument('--stat_estimation', type=str, default='one_logser') # one_logser/zero_logser/ZIP/NB/zero_NB/ZINB
+    parser.add_argument('--rand_seed', type=int, default=2022)
+    parser.add_argument('--cell_scale', type=float, default=1.0)
+
+    args = parser.parse_args()
+
+    if args.simu_type=='cell_type':
+        adata = sc.read(args.adata_dir)
+        args.n_peak = adata.shape[1]
+
+        adata_final=simCAS_generate(
+            adata_dir=args.adata_dir,
+            n_peak=args.n_peak,
+            n_cell_total=None,
+            rand_seed=args.rand_seed,
+            zero_prob=args.zero_prob,
+            zero_set=args.zero_set,
+            effect_mean=args.effect_mean,
+            effect_sd=args.effect_sd,
+            min_popsize=args.min_popsize,
+            min_pop=args.min_pop,
+            tree_text=args.tree_text,
+            pops_name=args.pops_name,
+            pops_size=args.pops_size,
+            embed_mean_same=args.embed_mean_same,
+            embed_sd_same=args.embed_sd_same,
+            embed_mean_diff=args.embed_mean_diff,
+            embed_sd_diff=args.embed_sd_diff,
+            len_cell_embed=args.len_cell_embed,
+            n_embed_diff=args.n_embed_diff,
+            simu_type=args.simu_type,
+            correct_iter=args.correct_iter,
+            activation=args.activation,
+            distribution=args.distribution,
+            bw_pm=args.bw_pm,
+            bw_lib=args.bw_lib,
+            bw_nozero=args.bw_nozero,
+            K=args.K,
+            A=args.A,
+            stat_estimation=args.stat_estimation,
+            cell_scale=args.cell_scale)
+
+    elif args.simu_type=='discrete':
+        if args.adata_dir!=None:
+            adata=sc.read(resultdir+'adata_forsimulation.h5ad')
+            peak_mean=np.log(cal_pm(adata)+1)
+            lib_size=np.log(cal_lib(adata)+1)
+            nozero=np.log(cal_nozero(adata)+1)
+        else:
+            print('use statistics of default peak-by-cell matrix')
+            peak_mean=pd.read_csv('../data/peak_mean_log.csv',index_col=0)
+            lib_size=pd.read_csv('../data/library_size_log.csv',index_col=0)
+            nozero=pd.read_csv('../data/nozero_log.csv',index_col=0)
+
+            peak_mean=np.array(peak_mean['peak mean'])
+            lib_size=np.array(lib_size['library size'])
+            nozero=np.array(nozero['nozero'])
+
+        if args.n_peak==-1:
+            args.n_peak=len(peak_mean)
+
+        adata_final=simCAS_generate(
+            peak_mean=peak_mean,
+            lib_size=lib_size,
+            nozero=nozero,
+            adata_dir=args.adata_dir,
+            n_peak=args.n_peak,
+            n_cell_total=args.n_cell_total,
+            rand_seed=args.rand_seed,
+            zero_prob=args.zero_prob,
+            zero_set=args.zero_set,
+            effect_mean=args.effect_mean,
+            effect_sd=args.effect_sd,
+            min_popsize=args.min_popsize,
+            min_pop=args.min_pop,
+            tree_text=args.tree_text,
+            pops_name=args.pops_name,
+            pops_size=args.pops_size,
+            embed_mean_same=args.embed_mean_same,
+            embed_sd_same=args.embed_sd_same,
+            embed_mean_diff=args.embed_mean_diff,
+            embed_sd_diff=args.embed_sd_diff,
+            len_cell_embed=args.len_cell_embed,
+            n_embed_diff=args.n_embed_diff,
+            simu_type=args.simu_type,
+            correct_iter=args.correct_iter,
+            activation=args.activation,
+            distribution=args.distribution,
+            bw_pm=args.bw_pm,
+            bw_lib=args.bw_lib,
+            bw_nozero=args.bw_nozero,
+            K=args.K,
+            A=args.A,
+            stat_estimation=args.stat_estimation,
+            cell_scale=args.cell_scale)
+
+    elif args.simu_type=='continuous':
+        if args.adata_dir!=None:
+            adata=sc.read(resultdir+'adata_forsimulation.h5ad')
+            peak_mean=np.log(cal_pm(adata)+1)
+            lib_size=np.log(cal_lib(adata)+1)
+            nozero=np.log(cal_nozero(adata)+1)
+        else:
+            print('use statistics of default peak-by-cell matrix')
+            peak_mean=pd.read_csv('../data/peak_mean_log.csv',index_col=0)
+            lib_size=pd.read_csv('../data/library_size_log.csv',index_col=0)
+            nozero=pd.read_csv('../data/nozero_log.csv',index_col=0)
+
+            peak_mean=np.array(peak_mean['peak mean'])
+            lib_size=np.array(lib_size['library size'])
+            nozero=np.array(nozero['nozero'])
+
+        if args.n_peak==-1:
+            args.n_peak=len(peak_mean)
+
+        adata_final=simCAS_generate(
+            peak_mean=peak_mean,
+            lib_size=lib_size,
+            nozero=nozero,
+            adata_dir=args.adata_dir,
+            n_peak=args.n_peak,
+            n_cell_total=args.n_cell_total,
+            rand_seed=args.rand_seed,
+            zero_prob=args.zero_prob,
+            zero_set=args.zero_set,
+            effect_mean=args.effect_mean,
+            effect_sd=args.effect_sd,
+            min_popsize=args.min_popsize,
+            min_pop=args.min_pop,
+            tree_text=args.tree_text,
+            pops_name=args.pops_name,
+            pops_size=args.pops_size,
+            embed_mean_same=args.embed_mean_same,
+            embed_sd_same=args.embed_sd_same,
+            embed_mean_diff=args.embed_mean_diff,
+            embed_sd_diff=args.embed_sd_diff,
+            len_cell_embed=args.len_cell_embed,
+            n_embed_diff=args.n_embed_diff,
+            simu_type=args.simu_type,
+            correct_iter=args.correct_iter,
+            activation=args.activation,
+            distribution=args.distribution,
+            bw_pm=args.bw_pm,
+            bw_lib=args.bw_lib,
+            bw_nozero=args.bw_nozero,
+            K=args.K,
+            A=args.A,
+            stat_estimation=args.stat_estimation,
+            cell_scale=args.cell_scale)
+    else:
+        raise ValueError('Wrong simu_type input!')
+
+    print("the simulated adata shape is:",adata_final.shape)
+    adata_final.write('../data/adata_final.h5ad')
