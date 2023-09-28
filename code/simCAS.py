@@ -2,7 +2,7 @@
 # Authors: Chen Li, Xiaoyang Chen
 # File name: utils.py
 # Description: 
-# Version: 0.0.1
+# Version: 1.0.0
 """
 
 import numpy as np
